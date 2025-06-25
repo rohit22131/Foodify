@@ -6,6 +6,7 @@ import axios from "axios";
 const OrderSummaryPage = () => {
   const { cart, clearCart } = useCart();
   const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false); // New loading state
   const navigate = useNavigate();
 
   const totalAmount = cart.reduce(
@@ -21,9 +22,11 @@ const OrderSummaryPage = () => {
       image,
     }));
 
+    setLoading(true); // start loading
+
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/orders",
+        `${process.env.REACT_APP_API_BASE_URL}/api/orders`,
         {
           items: cleanedItems,
           totalAmount,
@@ -41,6 +44,8 @@ const OrderSummaryPage = () => {
     } catch (error) {
       alert("Failed to place order");
       console.error(error);
+    } finally {
+      setLoading(false); // stop loading
     }
   };
 
@@ -84,7 +89,6 @@ const OrderSummaryPage = () => {
             className="w-full mt-6 p-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400"
           />
 
-          {/* Buttons Side-by-Side */}
           <div className="mt-6 flex justify-between items-center gap-4">
             <button
               onClick={() => navigate("/cart")}
@@ -95,9 +99,12 @@ const OrderSummaryPage = () => {
 
             <button
               onClick={handlePlaceOrder}
-              className="w-1/2 bg-green-600 text-white font-semibold py-3 rounded-md hover:bg-green-700 transition duration-300"
+              disabled={loading}
+              className={`w-1/2 ${
+                loading ? "bg-gray-400 cursor-not-allowed" : "bg-green-600 hover:bg-green-700"
+              } text-white font-semibold py-3 rounded-md transition duration-300`}
             >
-              Place Order
+              {loading ? "Placing..." : "Place Order"}
             </button>
           </div>
         </div>

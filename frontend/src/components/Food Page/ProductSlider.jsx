@@ -8,7 +8,7 @@ const ProductSlider = () => {
   useEffect(() => {
     const fetchSpecialProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/foods/specials");
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/foods/specials`);
         setSpecialProducts(res.data);
       } catch (err) {
         console.error("Error fetching special products", err);

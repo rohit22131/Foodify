@@ -15,8 +15,8 @@ function AuthForm() {
     setError("");
 
     const url = isLogin
-      ? "http://localhost:5000/api/users/login"
-      : "http://localhost:5000/api/users/register";
+      ? `${process.env.REACT_APP_API_BASE_URL}/api/users/login`
+      : `${process.env.REACT_APP_API_BASE_URL}/api/users/register`;
 
     const payload = isLogin ? { email, password } : { name, email, password };
 

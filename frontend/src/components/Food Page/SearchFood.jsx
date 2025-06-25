@@ -13,7 +13,7 @@ const SearchSection = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/foods");
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/foods`);
 
         // Only include non-special products
         const nonSpecials = res.data.filter((product) => !product.isSpecial);

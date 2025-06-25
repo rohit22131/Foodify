@@ -7,14 +7,14 @@ const MyOrdersPage = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/orders/my",
+      const response = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}/api/orders/my`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("authToken")}`,
             },
           }
-        );
+       );
         setOrders(response.data);
       } catch (error) {
         alert("Failed to load orders");

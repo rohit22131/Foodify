@@ -10,7 +10,7 @@ const AdminOrdersPage = () => {
 
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/orders", {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/admin/orders`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         },
@@ -25,7 +25,7 @@ const AdminOrdersPage = () => {
   const handleStatusChange = async (orderId, newStatus) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/orders/${orderId}/status`,
+        `${process.env.REACT_APP_API_BASE_URL}/api/orders/${orderId}/status`,
         { status: newStatus },
         {
           headers: {

@@ -24,7 +24,7 @@ const PaymentPage = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/payment",
+        `${process.env.REACT_APP_API_BASE_URL}/api/payment`,
         paymentInfo
       );
       if (response.data.success) {

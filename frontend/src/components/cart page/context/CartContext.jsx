@@ -14,7 +14,7 @@ export const CartProvider = ({ children }) => {
 
   const fetchCart = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/cart", {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/cart`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -28,7 +28,7 @@ export const CartProvider = ({ children }) => {
   const addToCart = async (product) => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/cart",
+        `${process.env.REACT_APP_API_BASE_URL}/api/cart`,
         {
           foodId: product._id,
           quantity: product.quantity,
@@ -47,7 +47,7 @@ export const CartProvider = ({ children }) => {
 
   const removeFromCart = async (foodId) => {
     try {
-      const res = await axios.delete(`http://localhost:5000/api/cart/${foodId}`, {
+      const res = await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/cart/${foodId}`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -60,7 +60,7 @@ export const CartProvider = ({ children }) => {
 
   const clearCart = async () => {
     try {
-      await axios.delete("http://localhost:5000/api/cart", {
+      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/cart`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
         },
