@@ -1,7 +1,7 @@
 import React from "react";
 import advPizza from "../../assets/adPizza.png";
 import advCombo from "../../assets/adCombo.png";
-import advNonVeg from "../../assets/AdNonVeg.png";
+import advNonVeg from "../../assets/adNonVeg.png";
 
 const AdvertisementBanner = () => {
   const sections = [
