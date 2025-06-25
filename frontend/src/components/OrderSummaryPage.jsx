@@ -26,7 +26,7 @@ const OrderSummaryPage = () => {
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_BASE_URL}/api/orders`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/orders`,
         {
           items: cleanedItems,
           totalAmount,

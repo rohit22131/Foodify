@@ -8,7 +8,7 @@ const MyOrdersPage = () => {
     const fetchOrders = async () => {
       try {
       const response = await axios.get(
-          `${process.env.REACT_APP_API_BASE_URL}/api/orders/my`,
+          `${import.meta.env.VITE_API_BASE_URL}/api/orders/my`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("authToken")}`,

@@ -15,8 +15,8 @@ function AuthForm() {
     setError("");
 
     const url = isLogin
-      ? `${process.env.REACT_APP_API_BASE_URL}/api/users/login`
-      : `${process.env.REACT_APP_API_BASE_URL}/api/users/register`;
+      ? `${import.meta.env.VITE_API_BASE_URL}/api/users/login`
+      : `${import.meta.env.VITE_API_BASE_URL}/api/users/register`;
 
     const payload = isLogin ? { email, password } : { name, email, password };
 

@@ -16,7 +16,7 @@ const AdminFoodPage = () => {
 
   const fetchFoods = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/foods`);
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/foods`);
       setFoods(res.data);
     } catch {
       alert("Failed to fetch food items");
@@ -55,7 +55,7 @@ const AdminFoodPage = () => {
     try {
       if (editFood) {
         await axios.put(
-          `${process.env.REACT_APP_API_BASE_URL}/api/foods/${editFood._id}`,
+          `${import.meta.env.VITE_API_BASE_URL}/api/foods/${editFood._id}`,
           newFood,
           {
             headers: {
@@ -64,7 +64,7 @@ const AdminFoodPage = () => {
           }
         );
       } else {
-        await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/foods`, newFood, {
+        await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/foods`, newFood, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
           },
@@ -91,7 +91,7 @@ const AdminFoodPage = () => {
       return;
 
     try {
-      await axios.delete(`${process.env.REACT_APP_API_BASE_URL}/api/foods/${id}`, {
+      await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/foods/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         },

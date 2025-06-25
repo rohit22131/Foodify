@@ -10,7 +10,7 @@ const ProductSection = () => {
   // Fetch food items from MongoDB via backend API
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_BASE_URL}/api/foods`)
+      .get(`${import.meta.env.VITE_API_BASE_URL}/api/foods`)
       .then((res) => setProducts(res.data))
       .catch(() => alert("Failed to fetch food items from server"));
   }, []);
