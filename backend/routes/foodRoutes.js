@@ -6,6 +6,7 @@ import {
   updateFoodItem,
   deleteFoodItem,
   getSpecialFoods,
+  toggleFoodAvailability,
 } from "../controllers/foodController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
@@ -21,5 +22,6 @@ router.get("/:id", getFoodById);
 router.post("/", protect, createFoodItem);
 router.put("/:id", protect, updateFoodItem);
 router.delete("/:id", protect, deleteFoodItem);
+router.put("/:id/toggle-availability", protect, toggleFoodAvailability)
 
 export default router;

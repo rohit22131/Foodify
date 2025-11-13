@@ -42,7 +42,9 @@ const getMyOrders = async (req, res) => {
 // Get All Orders (Admin)
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().populate("user", "name email");
+    const orders = await Order.find()
+      .populate("user", "name email")
+      .populate("deliveryAgent", "name email phone"); 
     res.status(200).json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -67,4 +69,27 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
-export { placeOrder, getMyOrders, getAllOrders, updateOrderStatus };
+// Assign Delivery Agent to Order (Admin)
+const assignAgentToOrder = async (req, res) => {
+  const { id } = req.params; 
+  const { agentId } = req.body;
+
+  try {
+    const order = await Order.findById(id);
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    order.deliveryAgent = agentId; 
+    await order.save();
+
+    const updatedOrder = await Order.findById(id).populate("deliveryAgent", "name email phone");
+
+    console.log("Assigning agent", agentId, "to order", id);
+    res.status(200).json({ message: "Agent assigned successfully", order: updatedOrder });
+  } catch (error) {
+    console.error("Error assigning agent:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+export { placeOrder, getMyOrders, getAllOrders, updateOrderStatus, assignAgentToOrder };

@@ -1,5 +1,5 @@
 import React from "react";
-import { useCart } from "./context/CartContext";
+import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
@@ -54,7 +54,7 @@ const Cart = () => {
                     </span>
                     <button
                       onClick={() =>
-                        removeFromCart(item.foodId._id || item.foodId)
+                        removeFromCart(item.foodId?._id ?? item._id)
                       }
                       className="bg-red-600 text-white py-1 px-3 rounded hover:bg-red-700 transition"
                     >

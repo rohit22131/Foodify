@@ -1,75 +1,81 @@
-import User from "../models/User.js";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import crypto from "crypto";
+import nodemailer from "nodemailer";
+import User from "../models/User.js";
+import { generateToken } from "../utils/generateToken.js";
 
-// Email validation function
-const validateEmail = (email) => {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(String(email).toLowerCase());
-};
-
-// Register User
-const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+// REGISTER
+export const registerUser = async (req, res) => {
   try {
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: "Please fill all fields" });
-    }
-
-    if (!validateEmail(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
-    }
+    const { name, email, password } = req.body;
 
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const verificationToken = crypto.randomBytes(32).toString("hex");
 
-    const newUser = await User.create({
+    const user = await User.create({
       name,
       email,
       password: hashedPassword,
+      verificationToken,
     });
 
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-      expiresIn: "30d",
-    });
-
-    res.status(201).json({
-      token,
-      user: {
-        _id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-        isAdmin: newUser.isAdmin,
+    // Send email
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
+
+    const verificationUrl = `http://localhost:5173/verify-email?token=${verificationToken}`;
+
+    try {
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: "Verify your Email",
+        html: `<p>Click <a href="${verificationUrl}">here</a> to verify your email.</p>`,
+      });
+    } catch (emailError) {
+      console.error("Email sending failed:", emailError);
+    }
+
+    return res.status(201).json({
+      message: "User registered. Please verify your email before logging in.",
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Register Error:", error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
-// Login User
-const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-
+// LOGIN
+export const loginUser = async (req, res) => {
   try {
+    const { email, password } = req.body;
+
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "Invalid Credentials" });
+    if (!user) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
-      return res.status(400).json({ message: "Invalid Credentials" });
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "30d",
-    });
+    if (!user.isVerified) {
+      return res.status(401).json({ message: "Please verify your email before login" });
+    }
 
-    res.status(200).json({
-      token,
+    return res.json({
+      token: generateToken(user._id.toString()),
       user: {
         _id: user._id,
         name: user.name,
@@ -78,8 +84,77 @@ const loginUser = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Login Error:", error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
-export { registerUser, loginUser };
+// EMAIL VERIFICATION
+export const verifyEmail = async (req, res) => {
+  const token = req.query.token;
+
+  const user = await User.findOne({ verificationToken: token });
+  if (!user) return res.status(400).json({ message: "Invalid or expired token" });
+
+  user.isVerified = true;
+  user.verificationToken = "";
+  await user.save();
+
+  res.status(200).json({ message: "Email verified successfully!" });
+};
+
+// GET USER PROFILE
+export const getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Controller to update user profile photo
+export const uploadProfilePhoto = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    user.profilePhoto = `/uploads/${req.file.filename}`;
+    await user.save();
+
+    res.status(200).json({ profilePhoto: user.profilePhoto });
+  } catch (err) {
+    console.error("Upload error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// EDIT USER PROFILE
+export const editUserProfile = async (req, res) => {
+  try {
+    const { name, email, phone } = req.body;
+
+    if (!name || !email || !phone) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.name = name;
+    user.email = email;
+    user.phone = phone;
+
+    await user.save();
+    res.json({ message: "Profile updated successfully", user });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to update profile" });
+  }
+};

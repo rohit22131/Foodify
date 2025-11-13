@@ -92,6 +92,22 @@ const getSpecialFoods = async (req, res) => {
   }
 };
 
+// toggle food availability
+const toggleFoodAvailability = async (req, res) => {
+  try {
+    const food = await Food.findById(req.params.id);
+    if (!food) return res.status(404).json({ message: 'Food item not found' });
+
+    food.available = !food.available;
+    await food.save();
+
+    res.json({ available: food.available });
+  } catch (error) {
+    console.error("toggleFoodAvailability error:", error);
+    res.status(500).json({ message: error.message });
+  }
+}
+
 export {
   getAllFoodItems,
   getFoodById,
@@ -99,4 +115,5 @@ export {
   updateFoodItem,
   deleteFoodItem,
   getSpecialFoods,
+  toggleFoodAvailability
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useCart } from "../cart page/context/CartContext";
+import { useCart } from "../context/CartContext";
 
 const SearchSection = () => {
   const [query, setQuery] = useState("");

@@ -25,25 +25,25 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const addToCart = async (product) => {
-    try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/cart`,
-        {
-          foodId: product._id,
-          quantity: product.quantity,
+const addToCart = async (product) => {
+  try {
+    const res = await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}/api/cart`,
+      {
+        foodId: product._id, // Only send ID and quantity
+        quantity: product.quantity || 1,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
-      setCart(res.data.items);
-    } catch (err) {
-      console.error("Add to cart failed", err);
-    }
-  };
+      }
+    );
+    setCart(res.data.items); // Update state with returned cart
+  } catch (err) {
+    console.error("Add to cart failed", err);
+  }
+};
 
   const removeFromCart = async (foodId) => {
     try {

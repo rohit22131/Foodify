@@ -4,6 +4,7 @@ import {
   getMyOrders,
   getAllOrders,
   updateOrderStatus,
+  assignAgentToOrder,
 } from "../controllers/orderController.js";
 
 import { protect, isAdmin } from "../middleware/authMiddleware.js";
@@ -17,5 +18,7 @@ router.get("/my", protect, getMyOrders);
 // ADMIN ROUTES
 router.get("/", protect, isAdmin, getAllOrders);
 router.put("/:id/status", protect, isAdmin, updateOrderStatus);
+router.put("/:id/assign-agent", protect, isAdmin, assignAgentToOrder);
+
 
 export default router;

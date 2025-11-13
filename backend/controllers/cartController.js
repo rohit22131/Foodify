@@ -20,7 +20,7 @@ const getUserCart = async (req, res) => {
 
 // Add or Update Item in Cart
 const addToCart = async (req, res) => {
-  const userId = req.user._id; // from token
+  const userId = req.user._id;
   const { foodId, quantity } = req.body;
 
   try {
@@ -34,12 +34,13 @@ const addToCart = async (req, res) => {
       cart = new Cart({ userId, items: [] });
     }
 
-    const existingItemIndex = cart.items.findIndex(
-      (item) => item.foodId.toString() === foodId
-    );
+    const existingItemIndex = cart.items.findIndex((item) => {
+      const existingId = item.foodId._id || item.foodId;
+      return existingId.toString() === foodId;
+    });
 
     if (existingItemIndex > -1) {
-      // Update quantity
+      // Update quantity of existing item
       cart.items[existingItemIndex].quantity += quantity;
     } else {
       // Add new item
