@@ -59,7 +59,7 @@ const AddressPage = () => {
       if (editingId) {
         // Update existing
         const { data } = await axios.put(
-          `http://localhost:5000/api/addresses/${editingId}`,
+          `https://foodify-2-8t6w.onrender.com/api/addresses/${editingId}`,
           form,
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -69,7 +69,7 @@ const AddressPage = () => {
       } else {
         // Add new
         const { data } = await axios.post(
-          "http://localhost:5000/api/addresses",
+          "https://foodify-2-8t6w.onrender.com/api/addresses",
           form,
           { headers: { Authorization: `Bearer ${token}` } }
         );
