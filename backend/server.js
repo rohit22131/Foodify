@@ -33,12 +33,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // Built-in middleware
-app.use(cors(
-  {
-  origin: process.env.CLIENT_URL,
-  credentials: true
-}
-));
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
