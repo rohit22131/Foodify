@@ -77,7 +77,7 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg p-6 mt-8">
+    <div className="max-w-lg mx-auto bg-white shadow-lg rounded-lg p-6 my-8">
       <h2 className="text-2xl font-semibold mb-4">Edit Profile</h2>
 
       {loading && <p className="text-gray-500">Loading...</p>}
@@ -122,7 +122,7 @@ const EditProfile = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded"
+          className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded"
         >
           {loading ? "Saving..." : "Save Changes"}
         </button>

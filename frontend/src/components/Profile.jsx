@@ -157,12 +157,6 @@ const Profile = () => {
                   <FaEdit /> Edit Profile
                 </button>
                 <button
-                  className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 flex items-center gap-2 justify-center"
-                  onClick={() => navigate(`/reset-password/sampletoken123`)}
-                >
-                  <FaLock /> Reset Password
-                </button>
-                <button
                   className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 flex items-center gap-2 justify-center"
                   onClick={handleLogout}
                 >

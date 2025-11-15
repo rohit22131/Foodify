@@ -17,7 +17,6 @@ import AdminFoodPage from './components/admin/adminFoodPage';
 import AdminUsersPage from './components/admin/adminUsersPage';
 import ScrollToTop from './components/ScrollToTop';
 import ForgetPassword from './components/auth page/ForgetPassword';
-import ResetPassword from './components/auth page/ResetPassword';
 import Profile from './components/Profile';
 import EditProfile from './components/EditProfile';
 import AdminAnalyticsPage from './components/admin/adminAnalyticsPage';
@@ -43,7 +42,6 @@ function App() {
           <Route path='/order-success' element={<OrderSuccessPage />} />
           <Route path="/my-orders" element={<MyOrdersPage />} />
           <Route path="/forgot-password" element={<ForgetPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="profile" element={<Profile />} />
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
