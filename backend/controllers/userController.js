@@ -33,7 +33,7 @@ export const registerUser = async (req, res) => {
       },
     });
 
-    const verificationUrl = `http://localhost:5173/verify-email?token=${verificationToken}`;
+    const verificationUrl = `${process.env.CLIENT_URL}/verify-email?token=${verificationToken}`;
 
     try {
       await transporter.sendMail({
@@ -103,7 +103,7 @@ export const verifyEmail = async (req, res) => {
   res.status(200).json({ message: "Email verified successfully!" });
 };
 
-// GET USER PROFILE
+// GET USER 
 export const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("-password");
